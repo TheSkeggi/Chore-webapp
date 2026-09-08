@@ -1030,52 +1030,17 @@
   <div id="calConnectBanner" class="form-card" style="text-align:center;padding:30px;display:none">
     <div style="font-size:3rem;margin-bottom:10px">📅</div>
     <div style="font-family:-apple-system,'SF Pro Rounded','Helvetica Neue',Arial,sans-serif;font-weight:800;font-size:1.2rem;margin-bottom:8px">Connect Google Calendar</div>
-    <div style="color:var(--muted);font-weight:600;font-size:0.88rem;margin-bottom:18px">Enter your Google Client ID in ⚙️ Settings to sync your calendar and tasks.</div>
-    <button class="btn btn-primary" onclick="guardedPanel('settings', document.getElementById('tab-settings'))">⚙️ Go to Settings</button>
+    <div style="color:var(--muted);font-weight:600;font-size:0.88rem;margin-bottom:18px">Enter your Google Client ID in ⚙️ Settings, then choose calendars to sync in 🔒 Manage.</div>
+    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+      <button class="btn btn-primary" onclick="guardedPanel('settings', document.getElementById('tab-settings'))">⚙️ Settings</button>
+      <button class="btn btn-secondary" onclick="guardedPanel('manage', document.getElementById('tab-manage'))">🔒 Manage</button>
+    </div>
   </div>
 
   <div id="calContent" style="display:none">
-    <!-- Calendar selector -->
-    <div class="section-title">📅 Calendar</div>
-    <div class="form-card" style="margin-bottom:16px">
-      <div class="form-row" style="align-items:flex-end">
-        <div class="form-group">
-          <label>Sync Calendar</label>
-          <select id="calendarSelect" onchange="selectCalendar(this.value)">
-            <option value="">Loading calendars...</option>
-          </select>
-        </div>
-        <button class="btn btn-secondary btn-sm" onclick="refreshCalendar()" style="flex-shrink:0;margin-bottom:2px">🔄 Refresh</button>
-      </div>
-      <div id="calSyncStatus" style="font-size:0.8rem;font-weight:700;color:var(--muted);margin-top:8px"></div>
-    </div>
-
-    <!-- Lunch blocker keywords -->
-    <div class="section-title">🍽️ Lunch Planner Blocking</div>
-    <div class="form-card" style="margin-bottom:16px">
-      <p style="font-size:0.82rem;color:var(--muted);font-weight:600;margin-bottom:12px">
-        Events containing these keywords will block the lunch planner for that day. Leave empty to block all all-day events.
-      </p>
-      <div id="keywordTagList" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px"></div>
-      <div style="display:flex;gap:8px">
-        <input type="text" id="newKeywordInput" placeholder="e.g. School, Field Trip, Holiday"
-          style="flex:1" onkeydown="if(event.key==='Enter')addBlockKeyword()">
-        <button class="btn btn-secondary btn-sm" onclick="addBlockKeyword()">➕ Add</button>
-      </div>
-      <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
-        <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-weight:700;font-size:0.85rem">
-          <input type="checkbox" id="blockAllDayToggle" style="width:auto"
-            onchange="saveBlockSettings()">
-          Also block all all-day events (regardless of keyword)
-        </label>
-      </div>
-      <div style="margin-top:10px">
-        <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-weight:700;font-size:0.85rem">
-          <input type="checkbox" id="blockLongEventsToggle" style="width:auto"
-            onchange="saveBlockSettings()">
-          Also block timed events lasting 4+ hours
-        </label>
-      </div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px">
+      <div id="calSyncStatus" style="font-size:0.82rem;font-weight:700;color:var(--muted)"></div>
+      <button class="btn btn-secondary btn-sm" onclick="refreshCalendar()">🔄 Refresh</button>
     </div>
 
     <!-- Upcoming events -->
@@ -1205,6 +1170,38 @@
   <div style="margin-top:20px">
     <div class="section-title">🎖️ Existing Awards</div>
     <div id="awardsManageList"></div>
+
+  <div style="margin-top:24px">
+    <div class="section-title">📅 Calendar Sync</div>
+    <div class="form-card">
+      <div id="manageCalStatus" style="font-size:0.85rem;font-weight:700;margin-bottom:12px;color:var(--muted)">Not connected to Google</div>
+      <div id="calendarCheckboxList" style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px"></div>
+      <button class="btn btn-ghost btn-sm" onclick="refreshCalendarList()">🔄 Refresh Calendars</button>
+    </div>
+  </div>
+
+  <div style="margin-top:20px">
+    <div class="section-title">🍽️ Lunch Planner Blocking</div>
+    <div class="form-card">
+      <p style="font-size:0.82rem;color:var(--muted);font-weight:600;margin-bottom:12px">
+        Events from synced calendars containing these keywords will block the lunch planner for that day.
+      </p>
+      <div id="keywordTagList" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px"></div>
+      <div style="display:flex;gap:8px;margin-bottom:10px">
+        <input type="text" id="newKeywordInput" placeholder="e.g. School, Field Trip, Holiday"
+          style="flex:1" onkeydown="if(event.key==='Enter')addBlockKeyword()">
+        <button class="btn btn-secondary btn-sm" onclick="addBlockKeyword()">➕ Add</button>
+      </div>
+      <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-weight:700;font-size:0.85rem;margin-bottom:8px">
+        <input type="checkbox" id="blockAllDayToggle" style="width:auto" onchange="saveBlockSettings()">
+        Block all all-day events (no keyword needed)
+      </label>
+      <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-weight:700;font-size:0.85rem">
+        <input type="checkbox" id="blockLongEventsToggle" style="width:auto" onchange="saveBlockSettings()">
+        Block timed events lasting 4+ hours
+      </label>
+    </div>
+  </div>
   </div>
 </div>
 
@@ -1589,6 +1586,8 @@ function renderManage() {
 
   renderChoreManageList();
   renderAwardsManageList();
+  renderCalendarCheckboxes();
+  syncBlockToggles();
 }
 
 function renderChoreManageList() {
@@ -3064,7 +3063,7 @@ const GCAL_SCOPES = [
 let gcalToken      = null;
 let gcalCalendars  = [];
 let gcalTaskLists  = [];
-let selectedCalId  = null;
+let selectedCalIds = new Set(JSON.parse(localStorage.getItem('gcalSelectedCalIds') || '[]'));
 let selectedTaskListId = null;
 let calEvents      = []; // cached events
 
@@ -3136,24 +3135,50 @@ async function gcalFetch(url) {
 
 async function loadCalendars() {
   try {
-    const data = await gcalFetch('https://www.googleapis.com/calendar/v3/users/me/calendarList?maxResults=50');
-    gcalCalendars = data.items || [];
-    const sel = document.getElementById('calendarSelect');
-    if (sel) {
-      sel.innerHTML = '<option value="">— Choose a calendar —</option>' +
-        gcalCalendars.map(c =>
-          `<option value="${c.id}" ${c.id === selectedCalId ? 'selected' : ''}>${c.summary}</option>`
-        ).join('');
-    }
-    // Auto-select saved calendar
-    const saved = localStorage.getItem('gcalSelectedCalId');
-    if (saved && gcalCalendars.find(c => c.id === saved)) {
-      selectedCalId = saved;
-      if (sel) sel.value = saved;
-      await loadEvents();
-    }
+    const d = await gcalFetch('https://www.googleapis.com/calendar/v3/users/me/calendarList?maxResults=50');
+    gcalCalendars = d.items || [];
+    renderCalendarCheckboxes();
+    if (selectedCalIds.size > 0) await loadEvents();
   } catch(e) { console.error('loadCalendars', e); }
 }
+
+function renderCalendarCheckboxes() {
+  const el = document.getElementById('calendarCheckboxList');
+  const status = document.getElementById('manageCalStatus');
+  if (!el) return;
+  if (!gcalToken) {
+    if (status) status.textContent = 'Not connected — go to Settings to connect Google.';
+    el.innerHTML = ''; return;
+  }
+  if (!gcalCalendars.length) { if (status) status.textContent = 'No calendars found.'; return; }
+  if (status) status.textContent = `${selectedCalIds.size} calendar${selectedCalIds.size !== 1 ? 's' : ''} selected`;
+  el.innerHTML = gcalCalendars.map(c => `
+    <label style="display:flex;align-items:center;gap:10px;cursor:pointer;padding:8px 10px;background:var(--bg);border-radius:10px;border:2px solid ${selectedCalIds.has(c.id)?'var(--secondary)':'var(--border)'}">
+      <input type="checkbox" ${selectedCalIds.has(c.id)?'checked':''} style="width:auto;accent-color:var(--secondary)"
+        onchange="toggleCalendar(this.dataset.calid, this.checked)" data-calid="${c.id}">
+      <span style="width:12px;height:12px;border-radius:50%;background:${c.backgroundColor||'#4285f4'};flex-shrink:0;display:inline-block"></span>
+      <span style="font-weight:700;font-size:0.88rem;flex:1">${c.summary}</span>
+      ${c.primary ? '<span style="font-size:0.7rem;font-weight:800;color:var(--secondary)">Primary</span>' : ''}
+    </label>`).join('');
+}
+
+async function toggleCalendar(calId, checked) {
+  if (checked) selectedCalIds.add(calId);
+  else selectedCalIds.delete(calId);
+  localStorage.setItem('gcalSelectedCalIds', JSON.stringify([...selectedCalIds]));
+  renderCalendarCheckboxes();
+  await loadEvents();
+}
+
+async function refreshCalendarList() {
+  if (!gcalToken) { showToast('Connect Google first in Settings'); return; }
+  await loadCalendars();
+  showToast('Calendars refreshed!');
+}
+
+async function selectCalendar() {} // kept for compat
+
+
 
 async function loadTaskLists() {
   try {
@@ -3175,16 +3200,6 @@ async function loadTaskLists() {
   } catch(e) { console.error('loadTaskLists', e); }
 }
 
-async function selectCalendar(calId) {
-  selectedCalId = calId;
-  localStorage.setItem('gcalSelectedCalId', calId);
-  if (calId) await loadEvents();
-  else {
-    calEvents = [];
-    renderEventsList();
-    renderLunchBlockers();
-  }
-}
 
 async function selectTaskList(listId) {
   selectedTaskListId = listId;
@@ -3193,28 +3208,36 @@ async function selectTaskList(listId) {
 }
 
 async function loadEvents() {
-  if (!gcalToken || !selectedCalId) return;
+  if (!gcalToken || selectedCalIds.size === 0) {
+    calEvents = []; renderEventsList(); renderLunchBlockers(); return;
+  }
   try {
-    // Start from beginning of this week (Sunday) so all days are covered
     const now = new Date();
     const weekStart = new Date(now);
-    weekStart.setDate(now.getDate() - now.getDay()); // back to Sunday
+    weekStart.setDate(now.getDate() - now.getDay());
     weekStart.setHours(0, 0, 0, 0);
     const weekEnd = new Date(weekStart);
-    weekEnd.setDate(weekStart.getDate() + 21); // 3 weeks out
+    weekEnd.setDate(weekStart.getDate() + 21);
 
-    const url = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(selectedCalId)}/events?`
-      + `timeMin=${weekStart.toISOString()}&timeMax=${weekEnd.toISOString()}`
-      + `&singleEvents=true&orderBy=startTime&maxResults=50`;
-    const d = await gcalFetch(url);
-    calEvents = d.items || [];
+    const results = await Promise.all([...selectedCalIds].map(calId => {
+      const url = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(calId)}/events?`
+        + `timeMin=${weekStart.toISOString()}&timeMax=${weekEnd.toISOString()}`
+        + `&singleEvents=true&orderBy=startTime&maxResults=50`;
+      return gcalFetch(url).then(d => (d.items || []).map(ev => ({ ...ev, _calId: calId }))).catch(() => []);
+    }));
+
+    calEvents = results.flat().sort((a, b) => {
+      const aT = a.start?.dateTime || a.start?.date || '';
+      const bT = b.start?.dateTime || b.start?.date || '';
+      return aT.localeCompare(bT);
+    });
     renderEventsList();
     renderLunchBlockers();
     const status = document.getElementById('calSyncStatus');
-    if (status) status.textContent = `Last synced: ${new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})}`;
+    if (status) status.textContent = `${calEvents.length} events from ${selectedCalIds.size} calendar${selectedCalIds.size!==1?'s':''} · ${new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}`;
   } catch(e) {
     const el = document.getElementById('calEventsList');
-    if (el) el.innerHTML = `<div style="color:var(--red);font-weight:700;padding:10px">Failed to load events: ${e.message}</div>`;
+    if (el) el.innerHTML = `<div style="color:var(--red);font-weight:700;padding:10px">Failed: ${e.message}</div>`;
   }
 }
 
